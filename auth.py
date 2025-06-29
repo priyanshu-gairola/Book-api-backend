@@ -13,10 +13,20 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 from datetime import datetime, timedelta
 from jose import jwt  # Install: pip install python-jose
 
-# ✅ Constants for signing JWT
-SECRET_KEY = "supersecretkey"  # Keep this secret in production!
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# # ✅ Constants for signing JWT
+# SECRET_KEY = "supersecretkey"  # Keep this secret in production!
+# ALGORITHM = "HS256"
+# ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+
 
 # ✅ Create a JWT token (after successful login)
 def create_access_token(data: dict, expires_delta: timedelta = None):
