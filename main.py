@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 import models, schemas, crud
 from database import SessionLocal, engine,get_db
 from auth import get_current_user,require_admin
+from  typing import List
 
 
 # Create database tables
@@ -26,8 +27,9 @@ def home():
 
 # Get all books
 @app.get("/books",tags=["Books"],summary="All Books",description="Get details of all books", response_model=list[schemas.BookResponse])
-def read_books(db: Session = Depends(get_db),current_user: models.Users = Depends(get_current_user)):
-    return crud.get_books(db)
+def read_books(db: Session = Depends(get_db),current_user: models.Users = Depends(get_current_user),
+               skip:int=0,limit:int=0):     #introduced pagination also
+    return crud.get_books(db,skip,limit)
 
 # Get book by title
 @app.get("/books/{title}",tags=["Books"], response_model=schemas.BookResponse)
@@ -73,6 +75,10 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
 def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     return crud.login_user(db, user)
 
+#to see all users ,only admin can see
+@app.get("/admim/users",response_model=list[schemas.UserResponse])
+def get_all_users(db:Session=Depends(get_db),admin:models.Users=Depends(require_admin)):
+    return crud.get_all_users(db)
 
 # from fastapi.openapi.utils import get_openapi
 #

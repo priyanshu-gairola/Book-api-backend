@@ -5,8 +5,13 @@ from auth import hash_password
 
 
 # Get all books from DB
-def get_books(db: Session):
-    return db.query(models.Book).all()
+# def get_books(db: Session):
+#     return db.query(models.Book).all()
+
+#with pagination
+def get_books(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(models.Book).offset(skip).limit(limit).all()
+
 
 # Get a single book by title
 def get_book_by_title(db: Session, title: str):
@@ -104,3 +109,7 @@ def login_user(db: Session, login_data: schemas.UserLogin):
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+def get_all_users(db: Session):
+    return db.query(models.Users).all()
+
