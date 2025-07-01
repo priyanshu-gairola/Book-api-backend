@@ -7,6 +7,8 @@ class BookBase(BaseModel):
     title: str
     author: str
     genre: str
+    price:float=0.0
+    rating:float=0.0
 
 # Schema for creating books
 class BookCreate(BookBase):
@@ -34,6 +36,7 @@ class BookUpdate(BaseModel):
     author: Optional[str]=None
     genre: Optional[str]=None
     quantity:Optional[int]=None
+
 
 
 class UserCreate(BaseModel):

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String,Float
 from database import Base
 
 # Define the Book model for the database
@@ -10,6 +10,8 @@ class Book(Base):
     author = Column(String)
     genre = Column(String)
     quantity = Column(Integer)
+    price=Column(Float)
+    rating=Column(Float)
 
 class Users(Base):
     __tablename__="users"

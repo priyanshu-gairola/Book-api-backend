@@ -1,16 +1,33 @@
 # 📁 crud.py
+from dns.e164 import query
 from sqlalchemy.orm import Session
 import models, schemas
 from auth import hash_password
+from sqlalchemy import asc,desc
 
 
 # Get all books from DB
 # def get_books(db: Session):
 #     return db.query(models.Book).all()
 
-#with pagination
-def get_books(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.Book).offset(skip).limit(limit).all()
+#with pagination and will add search func also
+def get_books(db: Session, skip: int = 0, limit: int = 10,title:str="",author="",
+              sort_by:str=None,sort_order:str="asc"):
+    query=db.query(models.Book)
+    if title:
+        query = query.filter(models.Book.title.ilike(f"%{title}%"))  # case-insensitive LIKE
+    if author:
+        query=query.filter(models.Book.author.ilike(f"%{author}%"))
+    if sort_by:
+        sort_column = getattr(models.Book, sort_by, None)
+        if sort_column:
+            if sort_order == "desc":
+                query = query.order_by(desc(sort_column))
+            else:
+                query = query.order_by(asc(sort_column))
+
+    #return query.offset(skip).limit(limit).all()
+    return query.offset(skip).limit(limit).all()
 
 
 # Get a single book by title
