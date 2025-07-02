@@ -12,12 +12,24 @@ from sqlalchemy import asc,desc
 
 #with pagination and will add search func also
 def get_books(db: Session, skip: int = 0, limit: int = 10,title:str="",author="",
+              genre:str="",min_price:int=None,max_price:int=None,
+              min_rating:float=None,max_rating:float=None,
               sort_by:str=None,sort_order:str="asc"):
     query=db.query(models.Book)
+    if genre:
+        query=query.filter(models.Book.genre.ilike(f"%{genre}%"))
     if title:
         query = query.filter(models.Book.title.ilike(f"%{title}%"))  # case-insensitive LIKE
     if author:
         query=query.filter(models.Book.author.ilike(f"%{author}%"))
+    if min_price:
+        query=query.filter(models.Book.price>=min_price)
+    if max_price:
+        query=query.filter(models.Book.price<=max_price)
+    if min_rating:
+        query=query.filter(models.Book.rating>=min_rating)
+    if max_rating:
+        query=query.filter(models.Book.rating<=max_rating)
     if sort_by:
         sort_column = getattr(models.Book, sort_by, None)
         if sort_column:

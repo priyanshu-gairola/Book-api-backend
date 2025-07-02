@@ -28,10 +28,14 @@ def home():
 # Get all books
 @app.get("/books",tags=["Books"],summary="All Books",description="Get details of all books", response_model=list[schemas.BookResponse])
 def read_books(db: Session = Depends(get_db),current_user: models.Users = Depends(get_current_user),
-               skip:int=0,limit:int=0,  #introduced pagination also
+               skip:int=0,limit:int=10,  #introduced pagination also
                title:str="" ,author="",   #introduced search also
+               genre:str="", min_price:float=None,max_price:float=None, # min and maxm price
+                min_rating:float=None,max_rating:float=None,   #min and max ratings also
                sort_by:str=None,sort_order:str="asc"):     #introduced sorting also
-    return crud.get_books(db,skip=skip,limit=limit,title=title,author=author,sort_by=sort_by,sort_order=sort_order)
+    return crud.get_books(db,skip=skip,limit=limit,title=title,author=author,sort_by=sort_by,sort_order=sort_order,
+                          genre=genre,min_price=min_price,max_price=max_price,
+                          min_rating=min_rating,max_rating=max_rating)
 
 # Get book by title
 @app.get("/books/{title}",tags=["Books"], response_model=schemas.BookResponse)
