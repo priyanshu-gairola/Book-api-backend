@@ -13,6 +13,8 @@ class BookBase(BaseModel):
 # Schema for creating books
 class BookCreate(BookBase):
     quantity: int
+    image_url:Optional[str]
+
 
 # Schema for reading books from the DB
 class BookResponse(BookBase):

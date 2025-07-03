@@ -1,16 +1,21 @@
 # 📁 main.py
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException ,UploadFile,File
 from sqlalchemy.orm import Session
 import models, schemas, crud
 from database import SessionLocal, engine,get_db
 from auth import get_current_user,require_admin
 from  typing import List
+from fastapi.staticfiles import  StaticFiles
 
+import shutil ,os,uuid
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Books API", description="Backend project with FastAPI + SQLite")
+
+# ✅ This will make /static/images accessible from browser
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # # Dependency to get DB session
 # def get_db():
@@ -32,10 +37,13 @@ def read_books(db: Session = Depends(get_db),current_user: models.Users = Depend
                title:str="" ,author="",   #introduced search also
                genre:str="", min_price:float=None,max_price:float=None, # min and maxm price
                 min_rating:float=None,max_rating:float=None,   #min and max ratings also
-               sort_by:str=None,sort_order:str="asc"):     #introduced sorting also
+               sort_by:str=None,sort_order:str="asc",  #introduced sorting also
+               file:UploadFile=File(...)):
+
+
     return crud.get_books(db,skip=skip,limit=limit,title=title,author=author,sort_by=sort_by,sort_order=sort_order,
                           genre=genre,min_price=min_price,max_price=max_price,
-                          min_rating=min_rating,max_rating=max_rating)
+                          min_rating=min_rating,max_rating=max_rating,)
 
 # Get book by title
 @app.get("/books/{title}",tags=["Books"], response_model=schemas.BookResponse)
@@ -86,32 +94,24 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
 def get_all_users(db:Session=Depends(get_db),admin:models.Users=Depends(require_admin)):
     return crud.get_all_users(db)
 
-# from fastapi.openapi.utils import get_openapi
-#
-# def custom_openapi():
-#     if app.openapi_schema:
-#         return app.openapi_schema
-#     openapi_schema = get_openapi(
-#         title=app.title,
-#         version="1.0",
-#         description=app.description,
-#         routes=app.routes,
-#     )
-#     openapi_schema["components"]["securitySchemes"] = {
-#         "BearerAuth": {
-#             "type": "http",
-#             "scheme": "bearer",
-#             "bearerFormat": "JWT"
-#         }
-#     }
-#     for path in openapi_schema["paths"].values():
-#         for operation in path.values():
-#             operation["security"] = [{"BearerAuth": []}]
-#     app.openapi_schema = openapi_schema
-#     return app.openapi_schema
-#
-# app.openapi_schema = None  # 🔁 Force FastAPI to rebuild schema
-# app.openapi = custom_openapi
-#
+# adding upload image route
+
+@app.post("/upload-image")
+async def upload_image(file:UploadFile=File(...)):
+    if not file.content_type.startswith("image/"):  #chking file type->jpg,png
+        raise HTTPException(status_code=400,detail="Invalid file type")
+
+    ext=file.filename.split(".")[-1]   #extracted extension
+    unique_filename=f"{uuid.uuid4()}.{ext}"
+
+    file_path = os.path.join("static", "images", unique_filename) #creating path
+
+    with open(file_path,"wb") as temp:
+        shutil.copyfileobj(file.file,temp) #binary is file.file
+
+    img_url=f"/static/images/{unique_filename}"
+    return {"filename":unique_filename,"url":img_url}
+
+
 
 

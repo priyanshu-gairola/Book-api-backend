@@ -12,6 +12,7 @@ class Book(Base):
     quantity = Column(Integer)
     price=Column(Float)
     rating=Column(Float)
+    image_url=Column(String,nullable=True)  #nullable to make it optional
 
 class Users(Base):
     __tablename__="users"
