@@ -20,6 +20,7 @@ class BookCreate(BookBase):
 class BookResponse(BookBase):
     id: int
     quantity: int
+    image_url:Optional[str]
 
     #model_config = ConfigDict(from_attributes=True)   v2
     class Config:   #this was in v1
@@ -38,6 +39,11 @@ class BookUpdate(BaseModel):
     author: Optional[str]=None
     genre: Optional[str]=None
     quantity:Optional[int]=None
+    price:Optional[float]=None
+    rating:Optional[float]=None
+    image_url:Optional[str]=None
+
+
 
 
 
