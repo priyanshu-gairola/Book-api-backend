@@ -1,6 +1,7 @@
 # 📁 schemas.py
-from pydantic import BaseModel,ConfigDict   # for v2
+from pydantic import BaseModel,ConfigDict ,Field  # for v2
 from typing import  Optional
+from datetime import datetime
 
 # Shared base schema
 class BookBase(BaseModel):
@@ -43,10 +44,6 @@ class BookUpdate(BaseModel):
     rating:Optional[float]=None
     image_url:Optional[str]=None
 
-
-
-
-
 class UserCreate(BaseModel):
     username: str
     email: str
@@ -66,4 +63,22 @@ class UserLogin(BaseModel):
     email:str
     password:str
 
+
+class ReviewBase(BaseModel):
+    rating: float = Field(..., ge=1.0, le=5.0, description="Rating between 1 and 5")
+    content: Optional[str] = None
+
+# For creating a review
+class ReviewCreate(ReviewBase):
+    pass
+
+# For returning review data
+class ReviewResponse(ReviewBase):
+    id: int
+    book_id: int
+    user_id: int
+
+
+    class Config:
+        orm_mode = True
 

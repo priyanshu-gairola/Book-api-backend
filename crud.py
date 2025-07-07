@@ -142,3 +142,29 @@ def login_user(db: Session, login_data: schemas.UserLogin):
 def get_all_users(db: Session):
     return db.query(models.Users).all()
 
+def create_review(db:Session,user_id:int,book_id:int,review:schemas.ReviewCreate):
+    # 1. Check if the book exists
+    book = db.query(models.Book).filter(models.Book.id == book_id).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+
+    existing = db.query(models.Reviews).filter_by(book_id=book_id, user_id=user_id).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Review already exists.")
+
+    new_review=models.Reviews(**review.dict(), book_id=book_id,
+        user_id=user_id)   #user id and book id were not part of schema which we used for crteating review
+    db.add(new_review)
+    db.commit()
+    db.refresh(new_review)
+
+    return new_review
+
+# ✅ Get all reviews for a specific book
+def get_reviews_for_book(db: Session, book_id: int):
+    # 1. Check if the book exists
+    book = db.query(models.Book).filter(models.Book.id == book_id).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
+
+    return db.query(models.Reviews).filter(models.Reviews.book_id == book_id).all()

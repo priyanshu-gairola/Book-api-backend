@@ -112,5 +112,28 @@ async def upload_image(file:UploadFile=File(...)):
     return {"filename":unique_filename,"url":img_url}
 
 
+@app.post("/book/{book_id}/review", tags=["Reviews"], response_model=schemas.ReviewResponse)
+def create_review(
+    book_id: int,
+    review: schemas.ReviewCreate,  # ✅ This is important
+    db: Session = Depends(get_db),
+    current_user: models.Users = Depends(get_current_user)):
+    return crud.create_review(db=db, review=review, book_id=book_id, user_id=current_user.id)
+
+
+
+@app.get("/book/{book_id}/all_reviews",tags=["Reviews"],response_model=List[schemas.ReviewResponse])
+def get_reviews_for_book(book_id:int,db:Session=Depends(get_db)):    #dependecy always at last like here db
+
+    return crud.get_reviews_for_book(db ,book_id=book_id)
+
+
+
+
+
+
+
+
+
 
 
