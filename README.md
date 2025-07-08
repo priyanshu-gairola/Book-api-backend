@@ -33,26 +33,6 @@ A complete backend built with **FastAPI**, **SQLite**, and **SQLAlchemy**, imple
 
 ---
 
-## 📁 Folder Structure
-
-├── app/
-│ ├── main.py # Entry point for FastAPI
-│ ├── models.py # SQLAlchemy models
-│ ├── schemas.py # Pydantic schemas
-│ ├── database.py # DB session management
-│ ├── crud.py # CRUD operations
-│ ├── auth.py # Auth logic (JWT, login)
-│ ├── dependencies.py # Role & DB dependencies
-│ └── routers/ # Route handlers
-│ ├── users.py
-│ ├── books.py
-│ └── reviews.py
-├── static/ # For uploaded files
-├── .env # Environment variables
-├── requirements.txt # Project dependencies
-└── README.md # This file
-
-
 ---
 
 ## ⚙️ Setup Instructions
@@ -65,10 +45,12 @@ A complete backend built with **FastAPI**, **SQLite**, and **SQLAlchemy**, imple
 
 
 🧪 API Endpoints
-📘 Auth
+📘 Auth    
 Method	Endpoint	Description
 POST	/register	Register new user
 POST	/login	Login & get JWT token
+![image](https://github.com/user-attachments/assets/66af7569-bb79-4fd1-a255-9bec5957a243)
+
 
 📗 Books
 Method	Endpoint	Description
@@ -76,11 +58,15 @@ GET	/books/	Get list of books
 POST	/books/	Add new book (admin)
 PUT	/books/{id}	Update book (admin)
 DELETE	/books/{id}	Delete book (admin)
+![image](https://github.com/user-attachments/assets/8826fa4e-8432-41eb-930a-9926383e0618)
+
 
 📙 Reviews
 Method	Endpoint	Description
 POST	/review/{book_id}	Submit review (user only)
 GET	/review/book/{book_id}	View reviews for book
+![image](https://github.com/user-attachments/assets/6f7b6e7e-1048-4cd0-b9b1-98bd80de9cf8)
+
 
 🔐 Authentication & Security
 Users must login to get a JWT token
@@ -93,10 +79,10 @@ Role-based protection via dependency injection
 Passwords are hashed with bcrypt
 
 🔍 Advanced Features
-Pagination via skip and limit query params
+Pagination via skip and limit query params #
 
-Sorting using ?sort_by=price&order=asc
+Sorting using ?sort_by=price&order=asc #
 
-File upload with /upload route
+File upload with /upload route #
 
-Static files served via /static/ path
+Static files served via /static/ path #
