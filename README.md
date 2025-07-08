@@ -42,14 +42,12 @@ A complete backend built with **FastAPI**, **SQLite**, and **SQLAlchemy**, imple
   3. Install Dependencies
   4. Create .env File
   5. Run the app
-       uvicorn app.main:app --reload
+
 
 
 🧪 API Endpoints
 📘 Auth    
-Method	Endpoint	Description
-POST	/register	Register new user
-POST	/login	Login & get JWT token
+
 ![image](https://github.com/user-attachments/assets/66af7569-bb79-4fd1-a255-9bec5957a243)
 
 
@@ -60,7 +58,8 @@ POST	/login	Login & get JWT token
 
 📙 Reviews
 
-![image](https://github.com/user-attachments/assets/6f7b6e7e-1048-4cd0-b9b1-98bd80de9cf8)
+![image](https://github.com/user-attachments/assets/99f10a6b-956a-4f6f-9b31-eafc78d736d5)
+
 
 
 🔐 Authentication & Security
