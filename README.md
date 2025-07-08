@@ -41,7 +41,8 @@ A complete backend built with **FastAPI**, **SQLite**, and **SQLAlchemy**, imple
   2. Create Virtual Environment
   3. Install Dependencies
   4. Create .env File
-  5. Run the app           uvicorn app.main:app --reload
+  5. Run the app
+       uvicorn app.main:app --reload
 
 
 🧪 API Endpoints
@@ -53,18 +54,12 @@ POST	/login	Login & get JWT token
 
 
 📗 Books
-Method	Endpoint	Description
-GET	/books/	Get list of books
-POST	/books/	Add new book (admin)
-PUT	/books/{id}	Update book (admin)
-DELETE	/books/{id}	Delete book (admin)
+
 ![image](https://github.com/user-attachments/assets/8826fa4e-8432-41eb-930a-9926383e0618)
 
 
 📙 Reviews
-Method	Endpoint	Description
-POST	/review/{book_id}	Submit review (user only)
-GET	/review/book/{book_id}	View reviews for book
+
 ![image](https://github.com/user-attachments/assets/6f7b6e7e-1048-4cd0-b9b1-98bd80de9cf8)
 
 
