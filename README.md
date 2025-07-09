@@ -62,21 +62,23 @@ A complete backend built with **FastAPI**, **SQLite**, and **SQLAlchemy**, imple
 
 
 
-🔐 Authentication & Security
+🔐 **Authentication & Security**  
+
 Users must login to get a JWT token
 
 Include token in headers:
 Authorization: Bearer <token>
 
-Role-based protection via dependency injection
+**Role-based protection via dependency injection**
 
 Passwords are hashed with bcrypt
 
-🔍 Advanced Features
-Pagination via skip and limit query params #
+🔍 **Advanced Features**
 
-Sorting using ?sort_by=price&order=asc #
+Pagination via **skip and limit query** params 
 
-File upload with /upload route #
+Sorting using **?sort_by=price&order=asc** 
 
-Static files served via /static/ path #
+File upload with /**upload route** 
+
+Static files served via **/static/ path** 
