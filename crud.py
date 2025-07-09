@@ -38,7 +38,6 @@ def get_books(db: Session, skip: int = 0, limit: int = 10,title:str="",author=""
             else:
                 query = query.order_by(asc(sort_column))
 
-    #return query.offset(skip).limit(limit).all()
     return query.offset(skip).limit(limit).all()
 
 
@@ -66,7 +65,7 @@ def delete_book(db: Session, title: str):
 
 # Update an existing book partially
 
-# # ✅ PARTIAL UPDATE: Only update provided fields
+# #  PARTIAL UPDATE: Only update provided fields , here one by one chkinga ll fields
 # def update_book(db: Session, title: str, book_update:schemas.BookUpdate):
 #     db_book = get_book_by_title(db, title)
 #     if not db_book:
@@ -91,8 +90,8 @@ def update_book(db: Session, title: str, updates: schemas.BookUpdate):
     if not db_book:
         return None
 
-    update_data = updates.dict(exclude_unset=True)  # ← ✅ only fields user passed  version 1 pydantic
-    #update_data = updates.model_dump(exclude_unset=True)
+    update_data = updates.dict(exclude_unset=True)  #  only fields user passed  version 1 pydantic
+
 
     for key, value in update_data.items():
         setattr(db_book, key, value)
@@ -103,9 +102,12 @@ def update_book(db: Session, title: str, updates: schemas.BookUpdate):
 
 
 def create_user(db: Session, user: schemas.UserCreate):
-    # Check if user already exists
-    existing_user = db.query(models.Users).filter(models.Users.email == user.email).first()
-    if existing_user:
+    # Check if user already exists with username and emails
+    existing_username= db.query(models.Users).filter(models.Users.username == user.username).first()
+    if existing_username:
+        return None
+    existing_email = db.query(models.Users).filter(models.Users.email == user.email).first()
+    if existing_email:
         return None
 
     # Hash password and create user
@@ -160,7 +162,7 @@ def create_review(db:Session,user_id:int,book_id:int,review:schemas.ReviewCreate
 
     return new_review
 
-# ✅ Get all reviews for a specific book
+#  Get all reviews for a specific book
 def get_reviews_for_book(db: Session, book_id: int):
     # 1. Check if the book exists
     book = db.query(models.Book).filter(models.Book.id == book_id).first()

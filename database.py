@@ -1,13 +1,10 @@
 #CONNECTING SQLite database
 
-
 # Import the necessary function to create a connection to the database
 from sqlalchemy import create_engine
 
 # Import the base class for creating ORM models
-#from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base
-
 
 # Import sessionmaker to create DB sessions (used for interacting with DB)
 from sqlalchemy.orm import sessionmaker
@@ -17,10 +14,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SQLALCHEMY_DATABASE_URL=os.getenv("SQLALCHEMY_DATABASE_URL")
-# Set the URL for the SQLite database
-# "sqlite:///./books.db" means: use SQLite, DB file is books.db in current directory
-# SQLALCHEMY_DATABASE_URL = "sqlite:///./books.db"
-
 # Create the database engine that will handle connections
 # connect_args is required for SQLite to allow multi-thread access
 engine = create_engine(

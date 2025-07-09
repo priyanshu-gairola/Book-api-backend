@@ -28,12 +28,6 @@ class BookResponse(BookBase):
         orm_mode = True #When orm_mode = True, it allows Pydantic models to read data from ORM objects directly,
                         # like instances of a SQLAlchemy model, instead of needing to convert them to dictionaries first
 
-# Schema for updating books (partial allowed)
-# class BookUpdate(BaseModel):
-#     title: str | None = None
-#     author: str | None = None
-#     genre: str | None = None
-#     quantity: int | None = None
 
 class BookUpdate(BaseModel):
     title: Optional[str]=None

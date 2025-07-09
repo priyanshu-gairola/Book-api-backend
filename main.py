@@ -14,16 +14,9 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Books API", description="Backend project with FastAPI + SQLite")
 
-# ✅ This will make /static/images accessible from browser
+#  This will make /static/images accessible from browser
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# # Dependency to get DB session
-# def get_db():
-#     db = SessionLocal()
-#     try:
-#         yield db
-#     finally:
-#         db.close()
 
 #home page
 @app.get("/",tags=["Welcome"])
@@ -81,7 +74,7 @@ def update_book(title: str, book: schemas.BookUpdate, db: Session = Depends(get_
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
     new_user = crud.create_user(db, user)
     if not new_user:
-        raise HTTPException(status_code=400, detail="Email already exists")
+        raise HTTPException(status_code=400, detail="Email/username already exists")
     return new_user
 
 @app.post("/login",tags=["Login"])
