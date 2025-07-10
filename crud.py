@@ -1,5 +1,4 @@
 # 📁 crud.py
-from dns.e164 import query
 from sqlalchemy.orm import Session
 import models, schemas
 from auth import hash_password
@@ -31,7 +30,7 @@ def get_books(db: Session, skip: int = 0, limit: int = 10,title:str="",author=""
     if max_rating:
         query=query.filter(models.Book.rating<=max_rating)
     if sort_by:
-        sort_column = getattr(models.Book, sort_by, None)
+        sort_column = getattr(models.Book, sort_by, None)           # it will give us column like models.book.name for eg
         if sort_column:
             if sort_order == "desc":
                 query = query.order_by(desc(sort_column))
@@ -47,7 +46,7 @@ def get_book_by_title(db: Session, title: str):
 
 # Add a new book
 def create_book(db: Session, book: schemas.BookCreate):
-    db_book = models.Book(**book.dict())  #version 1
+    db_book = models.Book(**book.dict())  #version 1    convert a Pydantic model into a SQLAlchemy model instance.
     #db_book = models.Book(**book.model_dump())
 
     db.add(db_book)
