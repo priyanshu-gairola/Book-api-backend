@@ -82,7 +82,7 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     return crud.login_user(db, user)
 
 #to see all users ,only admin can see
-@app.get("/admim/users",response_model=list[schemas.UserResponse])
+@app.get("/admin/users",response_model=list[schemas.UserResponse])
 def get_all_users(db:Session=Depends(get_db),admin:models.Users=Depends(require_admin)):
     return crud.get_all_users(db)
 
@@ -105,7 +105,7 @@ async def upload_image(file:UploadFile=File(...)):
     return {"filename":unique_filename,"url":img_url}
 
 
-@app.post("/book/{book_id}/review", tags=["Reviews"], response_model=schemas.ReviewResponse)
+@app.post("/book/{book_id}/create_review", tags=["Reviews"], response_model=schemas.ReviewResponse)
 def create_review(
     book_id: int,
     review: schemas.ReviewCreate,  # ✅ This is important
