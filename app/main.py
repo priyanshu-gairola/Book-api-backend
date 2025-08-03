@@ -8,8 +8,8 @@ from typing import List
 from fastapi.staticfiles import StaticFiles
 import shutil, os, uuid
 
+from app.routers import  books,login,reviews
 
-import shutil ,os,uuid
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
@@ -25,70 +25,9 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 def home():
     return {"message": "Welcome to Book API"}
 
-# Get all books
-@app.get("/books",tags=["Books"],summary="All Books",description="Get details of all books", response_model=list[schemas.BookResponse])
-def read_books(db: Session = Depends(get_db),current_user: models.Users = Depends(get_current_user),
-               skip:int=0,limit:int=10,  #introduced pagination also
-               title:str="" ,author="",   #introduced search also
-               genre:str="", min_price:float=None,max_price:float=None, # min and maxm price
-                min_rating:float=None,max_rating:float=None,   #min and max ratings also
-               sort_by:str=None,sort_order:str="asc"): #introduced sorting also:
-
-
-    return crud.get_books(db,skip=skip,limit=limit,title=title,author=author,sort_by=sort_by,sort_order=sort_order,
-                          genre=genre,min_price=min_price,max_price=max_price,
-                          min_rating=min_rating,max_rating=max_rating)
-
-# Get book by title
-@app.get("/books/{title}",tags=["Books"], response_model=schemas.BookResponse)
-def read_book(title: str, db: Session = Depends(get_db),current_user:models.Users=Depends(get_current_user)):
-    db_book = crud.get_book_by_title(db, title)
-    if not db_book:
-        raise HTTPException(status_code=404, detail="Book not found")
-    return db_book
-
-# Add book
-@app.post("/books",tags=["Books"], response_model=schemas.BookResponse)
-def create_book(
-        book: schemas.BookCreate,
-        db: Session = Depends(get_db),
-        current_user: models.Users = Depends(require_admin)             #admin
-                ):
-     return crud.create_book(db, book)
-
-# Delete book
-@app.delete("/books/{title}",tags=["Books"], response_model=schemas.BookResponse)
-def delete_book(title: str, db: Session = Depends(get_db),current_user:models.Users=Depends(require_admin)):
-    deleted = crud.delete_book(db, title)
-    if not deleted:
-        raise HTTPException(status_code=404, detail="Book not found")
-    return deleted
-
-# Update book
-@app.patch("/books/{title}", tags=["Books"],response_model=schemas.BookResponse)
-def update_book(title: str, book: schemas.BookUpdate, db: Session = Depends(get_db),current_user:models.Users=Depends(require_admin)):
-    updated = crud.update_book(db, title, book)
-    if not updated:
-        raise HTTPException(status_code=404, detail="Book not found")
-    return updated
-
-@app.post("/signup",tags=["Register"], response_model=schemas.UserResponse)
-def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    new_user = crud.create_user(db, user)
-    if not new_user:
-        raise HTTPException(status_code=400, detail="Email/username already exists")
-    return new_user
-
-@app.post("/login",tags=["Login"])
-def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
-    return crud.login_user(db, user)
-
-#to see all users ,only admin can see
-@app.get("/admin/users",response_model=list[schemas.UserResponse])
-def get_all_users(db:Session=Depends(get_db),admin:models.Users=Depends(require_admin)):
-    return crud.get_all_users(db)
-
-# adding upload image route
+app.include_router(books.router)
+app.include_router(login.router)
+app.include_router(reviews.router)
 
 @app.post("/upload-image")
 async def upload_image(file:UploadFile=File(...)):
@@ -105,30 +44,3 @@ async def upload_image(file:UploadFile=File(...)):
 
     img_url=f"/static/images/{unique_filename}"
     return {"filename":unique_filename,"url":img_url}
-
-
-@app.post("/book/{book_id}/create_review", tags=["Reviews"], response_model=schemas.ReviewResponse)
-def create_review(
-    book_id: int,
-    review: schemas.ReviewCreate,  # ✅ This is important
-    db: Session = Depends(get_db),
-    current_user: models.Users = Depends(get_current_user)):
-    return crud.create_review(db=db, review=review, book_id=book_id, user_id=current_user.id)
-
-
-
-@app.get("/book/{book_id}/all_reviews",tags=["Reviews"],response_model=List[schemas.ReviewResponse])
-def get_reviews_for_book(book_id:int,db:Session=Depends(get_db)):    #dependecy always at last like here db
-
-    return crud.get_reviews_for_book(db ,book_id=book_id)
-
-
-
-
-
-
-
-
-
-
-
