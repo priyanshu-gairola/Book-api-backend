@@ -1,8 +1,9 @@
 # 📁 crud.py
 from sqlalchemy.orm import Session
-import models, schemas
-from auth import hash_password
+from app import models, schemas
+from app.auth import hash_password
 from sqlalchemy import asc,desc
+from typing import  List
 
 
 # Get all books from DB
@@ -104,10 +105,10 @@ def create_user(db: Session, user: schemas.UserCreate):
     # Check if user already exists with username and emails
     existing_username= db.query(models.Users).filter(models.Users.username == user.username).first()
     if existing_username:
-        return None
+        raise HTTPException(status_code=401, detail="username already present")
     existing_email = db.query(models.Users).filter(models.Users.email == user.email).first()
     if existing_email:
-        return None
+        raise HTTPException(status_code=401, detail="email already present")
 
     # Hash password and create user
     hashed_pw = hash_password(user.password)
@@ -122,7 +123,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
-from auth import verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from app.auth import verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from fastapi import HTTPException
 from datetime import timedelta
 

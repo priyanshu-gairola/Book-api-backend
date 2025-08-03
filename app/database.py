@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SQLALCHEMY_DATABASE_URL=os.getenv("SQLALCHEMY_DATABASE_URL")
+SQLALCHEMY_DATABASE_URL="sqlite:///./books.db"
 # Create the database engine that will handle connections
 # connect_args is required for SQLite to allow multi-thread access
 engine = create_engine(

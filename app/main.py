@@ -1,11 +1,13 @@
 # 📁 main.py
-from fastapi import FastAPI, Depends, HTTPException ,UploadFile,File
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
-import models, schemas, crud
-from database import SessionLocal, engine,get_db
-from auth import get_current_user,require_admin
-from  typing import List
+from app import models, schemas, crud
+from app.database import SessionLocal, engine, get_db
+from app.auth import get_current_user, require_admin
+from typing import List
 from fastapi.staticfiles import StaticFiles
+import shutil, os, uuid
+
 
 import shutil ,os,uuid
 
@@ -15,7 +17,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Books API", description="Backend project with FastAPI + SQLite")
 
 #  This will make /static/images accessible from browser
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 
 #home page
